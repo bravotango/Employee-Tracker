@@ -1,7 +1,7 @@
 {
   "name": "employee-tracker",
   "version": "1.0.0",
-  "description": "",
+  "description": "A command-line application to manage a company's employee database, using Node.js, Inquirer, and MySQL.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/bravotango/Employee-Tracker.git"
   },
-  "author": "",
+  "author": "Brian Tracy",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/bravotango/Employee-Tracker/issues"
