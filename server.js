@@ -1,3 +1,39 @@
+const express = require('express');
+const mysql = require('mysql2');
+
+const PORT = process.env.PORT || 3001;
+const app = express();
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+const displayJsonAsTable = (t) => {
+  const table = cTable.getTable(t);
+  console.log(table);
+};
+
+const db = mysql.createConnection(
+  {
+    host: 'localhost',
+    user: 'root',
+    password: 'h!d@d5494',
+    database: 'employee_db',
+  },
+  console.log(`Connected to the employee_db database.`)
+);
+
+db.query('SELECT * FROM department', function (err, results) {
+  displayJsonAsTable(results);
+});
+
+app.use((req, res) => {
+  res.status(404).end();
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 const inquirer = require('inquirer');
 const cTable = require('console.table');
 
@@ -16,10 +52,6 @@ const questionTypes = {
   UpdateRole: '/ Update an employee role',
 };
 
-const displayJsonAsTable = (t) => {
-  const table = cTable.getTable(t);
-  console.log(table);
-};
 const intro = () => {
   console.log(`
                               W E L C O M E
@@ -118,7 +150,7 @@ const questions = () => {
           validate: (response) => validation.required(response),
         },
       ]);
-      //   console.log(`Task =${answers.whatTask}`);
+      // console.log(`Task =${answers.whatTask}`);
       // console.log(`Task == ${answers.departmentName}`);
     });
 };
