@@ -1,5 +1,5 @@
 const express = require('express');
-const mysql = require('mysql2');
+const db = require('./db/connection');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -11,16 +11,6 @@ const displayJsonAsTable = (t) => {
   const table = cTable.getTable(t);
   console.log(table);
 };
-
-const db = mysql.createConnection(
-  {
-    host: 'localhost',
-    user: 'root',
-    password: 'h!d@d5494',
-    database: 'employee_db',
-  },
-  console.log(`Connected to the employee_db database.`)
-);
 
 db.query('SELECT * FROM department', function (err, results) {
   displayJsonAsTable(results);
@@ -36,11 +26,6 @@ app.listen(PORT, () => {
 
 const inquirer = require('inquirer');
 const cTable = require('console.table');
-
-const jsonArray = [
-  { name: 'foo', age: 10 },
-  { name: 'bar', age: 20 },
-];
 
 const questionTypes = {
   ViewDepartments: '= View all departments',
@@ -150,14 +135,11 @@ const questions = () => {
           validate: (response) => validation.required(response),
         },
       ]);
-      // console.log(`Task =${answers.whatTask}`);
-      // console.log(`Task == ${answers.departmentName}`);
     });
 };
 
 const init = () => {
   intro();
-  //displayJsonAsTable(jsonArray);
   questions();
 };
 
