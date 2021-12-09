@@ -1,42 +1,204 @@
-const { response } = require('express');
 const inquirer = require('inquirer');
-const cTable = require('console.table');
+require('console.table');
+const db = require('../db');
+// const mysql = require('mysql2');
+// const db = mysql.createConnection(
+//   {
+//     host: 'localhost',
+//     user: 'root',
+//     password: 'h!d@d5494',
+//     database: 'employee_db',
+//   },
+//   console.log(`Connected to the employee_db database.`)
+// );
 
-const mysql = require('mysql2');
-const db = mysql.createConnection(
-  {
-    host: 'localhost',
-    user: 'root',
-    password: 'h!d@d5494',
-    database: 'employee_db',
-  },
-  console.log(`Connected to the employee_db database.`)
-);
+// const db = mysql.createConnection(
+//     {
+//       host: 'localhost',
+//       user: process.env.DB_USER,
+//       password: process.env.DB_PASS,
+//       database: process.env.DB_NAME,
+//     },
+//     console.log(`Connected to the employee_db database.`)
+//   );
+const exit = () => {};
 
-const displayJsonAsTable = (t) => {
+const consoleLogJsonAsTable = (t) => {
   const table = cTable.getTable(t);
   console.log(table);
 };
 
-function viewDepartments() {
-  const sql = `SELECT * FROM department`;
-  db.query(sql, (err, data) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    displayJsonAsTable(data);
+const emptyMessage = (missing) => {
+  return `No ${missing} currently in the system.`;
+};
+
+const viewAllDepartments = async () => {
+  const [departments] = await db.getAllDepartments();
+  console.table(departments);
+  questions();
+};
+
+const viewAllEmployees = async () => {
+  const [employees] = await db.getAllEmployees();
+  console.table(employees);
+  questions();
+};
+
+const viewAllRoles = async () => {
+  const [roles] = await db.getAllRoles();
+  console.table(roles);
+  questions();
+};
+
+const addDepartment = async () => {
+  const answer = await inquirer.prompt([
+    {
+      type: 'input',
+      message: 'What is the name of the department?',
+      name: 'departmentName',
+      validate: (response) => validation.required(response),
+    },
+  ]);
+  await db.addDepartment(answer.departmentName);
+  const [roles] = await db.getAllDepartments();
+  console.table(roles);
+  questions();
+};
+
+const addRole = async () => {
+  const [departments] = await db.getAllDepartments();
+  const departmentChoices = departments.map((department) => {
+    return { name: department.name, value: department.id };
   });
-}
+  const answers = await inquirer.prompt([
+    {
+      type: 'input',
+      message: 'What is the name of the role?',
+      name: 'roleName',
+      validate: (response) => validation.required(response),
+    },
+    {
+      type: 'input',
+      message: 'What is the salary of the role? $',
+      name: 'roleSalary',
+      validate: (response) => validation.required(response),
+    },
+    {
+      type: 'list',
+      message: 'Which department does the role belong to?',
+      name: 'departmentId',
+      choices: departmentChoices,
+    },
+  ]);
+
+  await db.addRole(
+    answers.roleName,
+    parseInt(answers.roleSalary),
+    answers.departmentId
+  );
+  const [updatedRoles] = await db.getAllRoles();
+  console.table(updatedRoles);
+  questions();
+};
+
+const addEmployee = async () => {
+  const [employees] = await db.getAllEmployees();
+  let employeeChoices = await employees.map((employee) => {
+    return {
+      name: [employee.first_name, employee.last_name].join(' '),
+      value: employee.id,
+    };
+  });
+  employeeChoices.push({ name: 'No manager', value: null });
+
+  const [roles] = await db.getAllRoles();
+  const roleChoices = await roles.map((role) => {
+    return { name: role.title, value: role.role_id };
+  });
+
+  const answers = await inquirer.prompt([
+    {
+      type: 'input',
+      message: "What is the employee's first name?",
+      name: 'firstName',
+      validate: (response) => validation.required(response),
+    },
+    {
+      type: 'input',
+      message: "What is the employee's last name?",
+      name: 'lastName',
+      validate: (response) => validation.required(response),
+    },
+    {
+      type: 'list',
+      message: 'What is the role of the employee?',
+      name: 'roleId',
+      choices: roleChoices,
+    },
+    {
+      type: 'list',
+      message: "Who is the employee's manager?",
+      name: 'managerId',
+      choices: employeeChoices,
+    },
+  ]);
+
+  await db.addEmployee(
+    answers.firstName,
+    answers.lastName,
+    answers.roleId,
+    answers.managerId
+  );
+
+  const [updatedEmployees] = await db.getAllEmployees();
+  console.table(updatedEmployees);
+  questions();
+};
+
+const updateEmployee = async () => {
+  const [employees] = await db.getAllEmployees();
+  let employeeChoices = await employees.map((employee) => {
+    return {
+      name: [employee.first_name, employee.last_name].join(' '),
+      value: employee.id,
+    };
+  });
+
+  const [roles] = await db.getAllRoles();
+  const roleChoices = await roles.map((role) => {
+    return { name: role.title, value: role.role_id };
+  });
+
+  const answers = await inquirer.prompt([
+    {
+      type: 'list',
+      message: 'What employee are we updating?',
+      name: 'employeeId',
+      choices: employeeChoices,
+    },
+    {
+      type: 'list',
+      message: "What is the employee's new Role?",
+      name: 'newRoleId',
+      choices: roleChoices,
+    },
+  ]);
+
+  await db.updateEmployee(answers.employeeId, answers.newRoleId);
+  const [updatedEmployees] = await db.getAllEmployees();
+  console.table(updatedEmployees);
+  questions();
+};
 
 const questionTypes = {
-  ViewDepartments: '= View all departments',
-  ViewRoles: '= View all roles',
+  ViewAllDepartments: '= View all departments',
+  ViewAllRoles: '= View all roles',
   ViewAllEmployees: '= View all employees',
   AddDepartment: '+ Add a department',
   AddRole: '+ Add a role',
   AddEmployee: '+ Add an employee',
   UpdateRole: '/ Update an employee role',
+  Exit: 'Exit Program',
 };
 
 const validation = {
@@ -45,6 +207,7 @@ const validation = {
   },
 };
 
+let currentTask;
 const questions = () => {
   inquirer
     .prompt([
@@ -53,81 +216,51 @@ const questions = () => {
         message: 'What would you like to do?',
         name: 'whatTask',
         choices: [
-          questionTypes.ViewDepartments,
-          questionTypes.ViewAllEmployees,
+          questionTypes.ViewAllDepartments,
+          questionTypes.ViewAllRoles,
           questionTypes.ViewAllEmployees,
           questionTypes.AddDepartment,
           questionTypes.AddRole,
           questionTypes.AddEmployee,
           questionTypes.UpdateRole,
+          questionTypes.Exit,
         ],
       },
     ])
     .then((answers) => {
-      switch (answers.whatTask) {
-        case questionTypes.ViewDepartments: {
-          console.log('view departments found!!!');
-          viewDepartments();
+      currentTask = answers.whatTask;
+      switch (currentTask) {
+        case questionTypes.ViewAllDepartments: {
+          viewAllDepartments();
+          break;
         }
+        case questionTypes.ViewAllRoles:
+          viewAllRoles();
+          break;
+
+        case questionTypes.ViewAllEmployees:
+          viewAllEmployees();
+          break;
+
+        case questionTypes.AddDepartment:
+          addDepartment();
+          break;
+
+        case questionTypes.AddRole:
+          addRole();
+          break;
+
+        case questionTypes.AddEmployee:
+          addEmployee();
+          break;
+
+        case questionTypes.UpdateRole:
+          updateEmployee();
+          break;
+
+        case questionTypes.Exit:
+          process.exit();
       }
-      inquirer.prompt([
-        {
-          type: 'input',
-          message: 'What is the name of the department?',
-          name: 'departmentName',
-          when: answers.whatTask === questionTypes.AddDepartment,
-          validate: (response) => validation.required(response),
-        },
-        {
-          type: 'input',
-          message: 'What is the name of the role?',
-          name: 'roleName',
-          when: answers.whatTask === questionTypes.AddRole,
-          validate: (response) => validation.required(response),
-        },
-        {
-          type: 'input',
-          message: 'What is the salary of the role? $',
-          name: 'roleSalary',
-          when: answers.whatTask === questionTypes.AddRole,
-          validate: (response) => validation.required(response),
-        },
-        {
-          type: 'list',
-          message: 'Which department does the role belong to?',
-          name: 'roleDepartment',
-          choices: ['Get', 'list', 'from', 'query', 'to', 'db'],
-          when: answers.whatTask === questionTypes.AddRole,
-        },
-        {
-          type: 'input',
-          message: "What is the employee's first name?",
-          name: 'employeeFirstName',
-          when: answers.whatTask === questionTypes.AddEmployee,
-          validate: (response) => validation.required(response),
-        },
-        {
-          type: 'input',
-          message: "What is the employee's last name?",
-          name: 'employeeLastName',
-          when: answers.whatTask === questionTypes.AddEmployee,
-          validate: (response) => validation.required(response),
-        },
-        {
-          type: 'input',
-          message: 'What is the role of the employee?',
-          name: 'employeeRole',
-          when: answers.whatTask === questionTypes.AddRole,
-          validate: (response) => validation.required(response),
-        },
-        {
-          type: 'input',
-          message: "Who is the employee's manager?",
-          name: 'employeeManager',
-          when: answers.whatTask === questionTypes.AddRole,
-          validate: (response) => validation.required(response),
-        },
-      ]);
     });
 };
 
