@@ -6,14 +6,16 @@ class DB {
   }
 
   getAllDepartments() {
-    return this.connection.promise().query('SELECT * FROM department;');
+    return this.connection
+      .promise()
+      .query('SELECT * FROM department ORDER BY name;');
   }
 
   getAllRoles() {
     return this.connection
       .promise()
       .query(
-        'SELECT role.title, role.id AS role_id, department.name AS department, role.salary FROM role LEFT JOIN department ON role.department_id = department.id'
+        'SELECT role.title, role.id AS role_id, department.name AS department, role.salary FROM role LEFT JOIN department ON role.department_id = department.id ORDER BY role.title'
       );
   }
 
@@ -21,7 +23,15 @@ class DB {
     return this.connection
       .promise()
       .query(
-        'SELECT employee.id AS id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department_name, CONCAT(manager.first_name, " ", manager.last_name) AS manager FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id;'
+        'SELECT employee.id AS id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department_name, CONCAT(manager.first_name, " ", manager.last_name) AS manager FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id ORDER BY role.salary DESC;'
+      );
+  }
+
+  getDepartmentUtilizedBudgets() {
+    return this.connection
+      .promise()
+      .query(
+        'SELECT department.name AS department, SUM(role.salary) AS utilized_budget FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id GROUP BY department.id ORDER BY utilized_budget DESC'
       );
   }
 

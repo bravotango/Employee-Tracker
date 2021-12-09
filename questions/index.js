@@ -20,6 +20,12 @@ const viewAllRoles = async () => {
   questions();
 };
 
+const viewDepartmentUtilizedBudgets = async () => {
+  const [budgets] = await db.getDepartmentUtilizedBudgets();
+  console.table(budgets);
+  questions();
+};
+
 const addDepartment = async () => {
   const answer = await inquirer.prompt([
     {
@@ -164,6 +170,7 @@ const questionTypes = {
   ViewAllDepartments: '= View all departments',
   ViewAllRoles: '= View all roles',
   ViewAllEmployees: '= View all employees',
+  ViewDepartmentUtilizedBudgets: '= View department utilized budgets',
   AddDepartment: '+ Add a department',
   AddRole: '+ Add a role',
   AddEmployee: '+ Add an employee',
@@ -189,6 +196,7 @@ const questions = () => {
           questionTypes.ViewAllDepartments,
           questionTypes.ViewAllRoles,
           questionTypes.ViewAllEmployees,
+          questionTypes.ViewDepartmentUtilizedBudgets,
           questionTypes.AddDepartment,
           questionTypes.AddRole,
           questionTypes.AddEmployee,
@@ -210,6 +218,10 @@ const questions = () => {
 
         case questionTypes.ViewAllEmployees:
           viewAllEmployees();
+          break;
+
+        case questionTypes.ViewDepartmentUtilizedBudgets:
+          viewDepartmentUtilizedBudgets();
           break;
 
         case questionTypes.AddDepartment:
