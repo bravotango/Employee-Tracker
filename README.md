@@ -2,9 +2,9 @@
 
 Developers frequently have to create interfaces that allow non-developers to easily view and interact with information stored in databases. These interfaces are called **content management systems (CMS)**. This is a command-line application to manage a company's employee database, using Node.js, Inquirer, and MySQL.
 
-## Your Task
+## Because this application is not deployed
 
-Because this application is not deployed, there is a walk-through video that demonstrates it's functionality and all of the following acceptance criteria being met.
+There is a walk-through video that demonstrates it's functionality and all of the following acceptance criteria being met.
 
 ## User Story
 
