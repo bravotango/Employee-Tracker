@@ -1,36 +1,6 @@
 const inquirer = require('inquirer');
 require('console.table');
 const db = require('../db');
-// const mysql = require('mysql2');
-// const db = mysql.createConnection(
-//   {
-//     host: 'localhost',
-//     user: 'root',
-//     password: 'h!d@d5494',
-//     database: 'employee_db',
-//   },
-//   console.log(`Connected to the employee_db database.`)
-// );
-
-// const db = mysql.createConnection(
-//     {
-//       host: 'localhost',
-//       user: process.env.DB_USER,
-//       password: process.env.DB_PASS,
-//       database: process.env.DB_NAME,
-//     },
-//     console.log(`Connected to the employee_db database.`)
-//   );
-const exit = () => {};
-
-const consoleLogJsonAsTable = (t) => {
-  const table = cTable.getTable(t);
-  console.log(table);
-};
-
-const emptyMessage = (missing) => {
-  return `No ${missing} currently in the system.`;
-};
 
 const viewAllDepartments = async () => {
   const [departments] = await db.getAllDepartments();
