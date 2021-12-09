@@ -15,3 +15,5 @@ INSERT INTO `employee_db`.`employee` (`first_name`, `last_name`, `role_id`, `man
 INSERT INTO `employee_db`.`employee` (`first_name`, `last_name`, `role_id`, `manager_id`) VALUES ('Jim', 'Halbert', '4', '4');
 INSERT INTO `employee_db`.`employee` (`first_name`, `last_name`, `role_id`, `manager_id`) VALUES ('Michael', 'Scott', '3', '1');
 INSERT INTO `employee_db`.`employee` (`first_name`, `last_name`, `role_id`, `manager_id`) VALUES ('Pam', 'Beesly', '1', '4');
+INSERT INTO `employee_db`.`employee` (`first_name`, `last_name`, `role_id`, `manager_id`) VALUES ('Andy', 'Bernard', '4', '4');
+INSERT INTO `employee_db`.`employee` (`first_name`, `last_name`, `role_id`, `manager_id`) VALUES ('Dwight ', 'Schrute', '4', '4');
