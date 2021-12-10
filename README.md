@@ -41,6 +41,16 @@ WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database
 ```
 
+## Satisfied Technical Acceptance Criteria
+
+- Uses the [Inquirer package](https://www.npmjs.com/package/inquirer).
+
+- Uses the [MySQL2 package](https://www.npmjs.com/package/mysql2) to connect to a MySQL database.
+
+- Uses the [console.table package](https://www.npmjs.com/package/console.table) to print MySQL rows to the console.
+
+- Follows the 'Database Schema' outlined below.
+
 ## Database Schema:
 
 Schema contains the following three tables:
@@ -80,107 +90,21 @@ Schema contains the following three tables:
 Start a new Terminal from the project's root folder & run the following:
 
 ```
-$ mysql -u root -h localhost employee_db -p
+$ mysql -u root -h localhost -p
 mysql> source db/schema.sql
 mysql> source db/seeds.sql
 ```
 
 ![the office, season](./images/officeCharacters.png)
 
-## Screenshot Running Application
+## Video Setting up & Running Application
 
-![Screenshot running the program](./images/screenshot.png)
+The following video shows the application database being created, seeded, then application invoked from the command line:
 
-The following video shows an example of the application being used from the command line:
-
-[![A video thumbnail shows the command-line employee management application with a play button overlaying the view.](./Assets/12-sql-homework-video-thumbnail.png)](https://2u-20.wistia.com/medias/2lnle7xnpk)
-
-## Because this application is not deployed
-
-There is a walk-through video that demonstrates it's functionality and all of the following acceptance criteria being met.
+[![A video thumbnail shows the command-line employee management application with a play button overlaying the view.](./images/screenshot.png)](https://watch.screencastify.com/v/GV81cwvNd59shHGbHw7P)
 
 ## Bonus
 
-Try to add some additional functionality to your application, such as the ability to do the following:
-
-- Update employee managers.
-
-- View employees by manager.
-
-- View employees by department.
-
-- Delete departments, roles, and employees.
+Additional functionality:
 
 - View the total utilized budget of a department&mdash;in other words, the combined salaries of all employees in that department.
-
-## Grading Requirements
-
-This homework is graded based on the following criteria:
-
-### Deliverables: 10%
-
-- Your GitHub repository containing your application code.
-
-### Walkthrough Video: 27%
-
-- A walkthrough video that demonstrates the functionality of the employee tracker must be submitted, and a link to the video should be included in your README file.
-
-- The walkthrough video must show all of the technical acceptance criteria being met.
-
-- The walkthrough video must demonstrate how a user would invoke the application from the command line.
-
-- The walkthrough video must demonstrate a functional menu with the options outlined in the acceptance criteria.
-
-### Technical Acceptance Criteria: 40%
-
-- Satisfies all of the preceding acceptance criteria plus the following:
-
-  - Uses the [Inquirer package](https://www.npmjs.com/package/inquirer).
-
-  - Uses the [MySQL2 package](https://www.npmjs.com/package/mysql2) to connect to a MySQL database.
-
-  - Uses the [console.table package](https://www.npmjs.com/package/console.table) to print MySQL rows to the console.
-
-- Follows the table schema outlined in the homework instructions.
-
-### Repository Quality: 13%
-
-- Repository has a unique name.
-
-- Repository follows best practices for file structure and naming conventions.
-
-- Repository follows best practices for class/id naming conventions, indentation, quality comments, etc.
-
-- Repository contains multiple descriptive commit messages.
-
-- Repository contains a high-quality README with description and a link to a walkthrough video.
-
-### Application Quality 10%
-
-- The application user experience is intuitive and easy to navigate.
-
-### Bonus
-
-Fulfilling any of the following can add up to 20 points to your grade. Note that the highest grade you can achieve is still 100:
-
-- Application allows users to update employee managers (2 points).
-
-- Application allows users to view employees by manager (2 points).
-
-- Application allows users to view employees by department (2 points).
-
-- Application allows users to delete departments, roles, and employees (2 points for each).
-
-- Application allows users to view the total utilized budget of a department&mdash;in other words, the combined salaries of all employees in that department (8 points).
-
-## Review
-
-You are required to submit BOTH of the following for review:
-
-- A walkthrough video demonstrating the functionality of the application.
-
-- The URL of the GitHub repository, with a unique name and a README describing the project.
-
----
-
-© 2021 Trilogy Education Services, LLC, a 2U, Inc. brand. Confidential and Proprietary. All Rights Reserved.
